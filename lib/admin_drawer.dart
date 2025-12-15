@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:iris_app/admin_edit_profile.dart';
 import 'package:iris_app/app_colors.dart';
+import 'package:iris_app/sign_in.dart';
 
 import 'package:provider/provider.dart';
+class AdminDrawer extends StatefulWidget {
+  final Map<String, dynamic> staffData;
 
-class AdminDrawer extends StatelessWidget {
-  final String adminName;
-  final String adminEmail;
+  const AdminDrawer({Key? key, required this.staffData}) : super(key: key);
 
-  const AdminDrawer({
-    Key? key,
-    required this.adminName,
-    required this.adminEmail,
-  }) : super(key: key);
+ 
+
+  @override
+  State<AdminDrawer> createState() => _AdminDrawerState();
+}
+
+class _AdminDrawerState extends State<AdminDrawer> {
+  get staffData => widget.staffData;
 
   @override
   Widget build(BuildContext context) {
-    // final themeProvider = Provider.of<ThemeProvider>(context);
+   
+
+
 
     return Drawer(
       child: Column(
@@ -25,9 +31,7 @@ class AdminDrawer extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: AppColors.primaryBlue,
-            ),
+            decoration: const BoxDecoration(color: AppColors.primaryBlue),
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +47,7 @@ class AdminDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    adminName,
+                    staffData['email'].toString().split('@')[0],
                     style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 20,
@@ -52,7 +56,7 @@ class AdminDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    adminEmail,
+                    staffData['email'] ?? 'No email provided',
                     style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 14,
@@ -70,10 +74,7 @@ class AdminDrawer extends StatelessWidget {
                     ),
                     child: const Text(
                       'Administrator',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: AppColors.white, fontSize: 12),
                     ),
                   ),
                 ],
@@ -94,12 +95,15 @@ class AdminDrawer extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditAdminProfileScreen(),
+                        builder: (context) =>  EditAdminProfileScreen(
+                          staffData:widget.staffData,
+                        ),
                       ),
                     );
                   },
                 ),
                 const Divider(),
+
                 // ListTile(
                 //   leading: Icon(
                 //     themeProvider.isDarkMode
@@ -115,8 +119,6 @@ class AdminDrawer extends StatelessWidget {
                 //     activeColor: AppColors.primaryBlue,
                 //   ),
                 // ),
-                
-                
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.settings),
@@ -165,7 +167,7 @@ class AdminDrawer extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => SignInScreen(),));
                       },
                       child: const Text('Logout'),
                     ),
@@ -180,3 +182,4 @@ class AdminDrawer extends StatelessWidget {
     );
   }
 }
+  

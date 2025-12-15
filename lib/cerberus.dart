@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iris_app/app_colors.dart';
 
 // void main() {
 //   runApp(const IrisApp());
@@ -26,354 +27,354 @@ import 'package:google_fonts/google_fonts.dart';
 //   }
 // }
 
-class ModeSelectionScreen extends StatefulWidget {
-  const ModeSelectionScreen({Key? key}) : super(key: key);
+// class ModeSelectionScreen extends StatefulWidget {
+//   const ModeSelectionScreen({Key? key}) : super(key: key);
 
-  @override
-  State<ModeSelectionScreen> createState() => _ModeSelectionScreenState();
-}
+//   @override
+//   State<ModeSelectionScreen> createState() => _ModeSelectionScreenState();
+// }
 
-class _ModeSelectionScreenState extends State<ModeSelectionScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
+// class _ModeSelectionScreenState extends State<ModeSelectionScreen>
+//     with SingleTickerProviderStateMixin {
+//   late AnimationController _animationController;
+//   late Animation<double> _fadeAnimation;
+//   late Animation<Offset> _slideAnimation;
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
-    _animationController.forward();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _animationController = AnimationController(
+//       duration: const Duration(milliseconds: 1200),
+//       vsync: this,
+//     );
+//     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+//       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+//     );
+//     _slideAnimation =
+//         Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+//           CurvedAnimation(
+//             parent: _animationController,
+//             curve: Curves.easeOutCubic,
+//           ),
+//         );
+//     _animationController.forward();
+//   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _animationController.dispose();
+//     super.dispose();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667EEA), Color(0xFF764BA2), Color(0xFFF093FB)],
-          ),
-        ),
-        child: SafeArea(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Container(
+//         decoration: const BoxDecoration(
+//           gradient: LinearGradient(
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//             colors: [Color(0xFF667EEA), Color(0xFF764BA2), Color(0xFFF093FB)],
+//           ),
+//         ),
+//         child: SafeArea(
+//           child: FadeTransition(
+//             opacity: _fadeAnimation,
+//             child: SlideTransition(
+//               position: _slideAnimation,
 
-              child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height,
-                  ),
+//               child: SingleChildScrollView(
+//                 child: ConstrainedBox(
+//                   constraints: BoxConstraints(
+//                     minHeight: MediaQuery.of(context).size.height,
+//                   ),
 
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 40),
+//                   child: IntrinsicHeight(
+//                     child: Column(
+//                       children: [
+//                         const SizedBox(height: 40),
 
-                        // ✅ Logo
-                        Hero(
-                          tag: 'iris_logo',
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 30,
-                                  spreadRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(
-                                'assets/images/IRIS Logo (Only Eye).png',
-                              ),
-                              radius: 50,
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                        ),
+//                         // ✅ Logo
+//                         Hero(
+//                           tag: 'iris_logo',
+//                           child: Container(
+//                             padding: const EdgeInsets.all(20),
+//                             decoration: BoxDecoration(
+//                               color: Colors.white.withOpacity(0.2),
+//                               shape: BoxShape.circle,
+//                               boxShadow: [
+//                                 BoxShadow(
+//                                   color: Colors.black.withOpacity(0.2),
+//                                   blurRadius: 30,
+//                                   spreadRadius: 5,
+//                                 ),
+//                               ],
+//                             ),
+//                             child: CircleAvatar(
+//                               backgroundImage: AssetImage(
+//                                 'assets/images/IRIS Logo (Only Eye).png',
+//                               ),
+//                               radius: 50,
+//                               backgroundColor: Colors.white,
+//                             ),
+//                           ),
+//                         ),
 
-                        const SizedBox(height: 24),
+//                         const SizedBox(height: 24),
 
-                        Text(
-                          'CERBERUS',
-                          style: GoogleFonts.orbitron(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 6,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.3),
-                                offset: const Offset(0, 4),
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                        ),
+//                         Text(
+//                           'CERBERUS',
+//                           style: GoogleFonts.orbitron(
+//                             fontSize: 36,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.white,
+//                             letterSpacing: 6,
+//                             shadows: [
+//                               Shadow(
+//                                 color: Colors.black.withOpacity(0.3),
+//                                 offset: const Offset(0, 4),
+//                                 blurRadius: 10,
+//                               ),
+//                             ],
+//                           ),
+//                         ),
 
-                        const SizedBox(height: 8),
+//                         const SizedBox(height: 8),
 
-                        Text(
-                          'Retail Automation Assistant',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            color: Colors.white.withOpacity(0.9),
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
+//                         Text(
+//                           'Retail Automation Assistant',
+//                           style: GoogleFonts.poppins(
+//                             fontSize: 14,
+//                             color: Colors.white.withOpacity(0.9),
+//                             letterSpacing: 1.5,
+//                             fontWeight: FontWeight.w300,
+//                           ),
+//                         ),
 
-                        const Spacer(),
+//                         const Spacer(),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Select Analysis Mode',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
+//                         Padding(
+//                           padding: const EdgeInsets.symmetric(horizontal: 15),
+//                           child: Column(
+//                             children: [
+//                               Text(
+//                                 'Select Analysis Mode',
+//                                 style: GoogleFonts.poppins(
+//                                   fontSize: 22,
+//                                   fontWeight: FontWeight.w600,
+//                                   color: Colors.white,
+//                                 ),
+//                               ),
 
-                              const SizedBox(height: 22),
+//                               const SizedBox(height: 22),
 
-                              _buildEnhancedModeCard(
-                                context: context,
-                                title: 'Real Mode',
-                                subtitle: 'Real data with Layer 3 verification',
-                                icon: Icons.verified_user,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF11998E),
-                                    Color(0xFF38EF7D),
-                                  ],
-                                ),
-                                mode: 'real',
-                                features: [
-                                  '✓ Real-time analysis',
-                                  '✓ Database verified',
-                                ],
-                              ),
+//                               _buildEnhancedModeCard(
+//                                 context: context,
+//                                 title: 'Real Mode',
+//                                 subtitle: 'Real data with Layer 3 verification',
+//                                 icon: Icons.verified_user,
+//                                 gradient: const LinearGradient(
+//                                   colors: [
+//                                     Color(0xFF11998E),
+//                                     Color(0xFF38EF7D),
+//                                   ],
+//                                 ),
+//                                 mode: 'real',
+//                                 features: [
+//                                   '✓ Real-time analysis',
+//                                   '✓ Database verified',
+//                                 ],
+//                               ),
 
-                              const SizedBox(height: 15),
+//                               const SizedBox(height: 15),
 
-                              _buildEnhancedModeCard(
-                                context: context,
-                                title: 'Hallucinated Mode',
-                                subtitle:
-                                    'Simulated data for hallucination testing',
-                                icon: Icons.science,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFEB3349),
-                                    Color(0xFFF45C43),
-                                  ],
-                                ),
-                                mode: 'simulated',
-                                features: ['⚠ Fake data', '⚠ Educational only'],
-                              ),
-                            ],
-                          ),
-                        ),
+//                               _buildEnhancedModeCard(
+//                                 context: context,
+//                                 title: 'Hallucinated Mode',
+//                                 subtitle:
+//                                     'Simulated data for hallucination testing',
+//                                 icon: Icons.science,
+//                                 gradient: const LinearGradient(
+//                                   colors: [
+//                                     Color(0xFFEB3349),
+//                                     Color(0xFFF45C43),
+//                                   ],
+//                                 ),
+//                                 mode: 'simulated',
+//                                 features: ['⚠ Fake data', '⚠ Educational only'],
+//                               ),
+//                             ],
+//                           ),
+//                         ),
 
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // const Icon(
-                                  //   Icons.security,
-                                  //   size: 16,
-                                  //   color: Colors.white70,
-                                  // ),
-                                  const SizedBox(width: 4),
-                                  // Text(
-                                  //   'Powered by core 4 team',
-                                  //   style: GoogleFonts.poppins(
-                                  //     fontSize: 11,
-                                  //     color: Colors.white70,
-                                  //     fontWeight: FontWeight.w300,
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//                         Container(
+//                           padding: const EdgeInsets.all(20),
+//                           child: Column(
+//                             children: [
+//                               Row(
+//                                 mainAxisAlignment: MainAxisAlignment.center,
+//                                 children: [
+//                                   // const Icon(
+//                                   //   Icons.security,
+//                                   //   size: 16,
+//                                   //   color: Colors.white70,
+//                                   // ),
+//                                   const SizedBox(width: 4),
+//                                   // Text(
+//                                   //   'Powered by core 4 team',
+//                                   //   style: GoogleFonts.poppins(
+//                                   //     fontSize: 11,
+//                                   //     color: Colors.white70,
+//                                   //     fontWeight: FontWeight.w300,
+//                                   //   ),
+//                                   // ),
+//                                 ],
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  Widget _buildBadge(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          fontSize: 11,
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
+//   Widget _buildBadge(String text) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//       decoration: BoxDecoration(
+//         color: Colors.white.withOpacity(0.2),
+//         borderRadius: BorderRadius.circular(20),
+//         border: Border.all(color: Colors.white.withOpacity(0.3)),
+//       ),
+//       child: Text(
+//         text,
+//         style: GoogleFonts.poppins(
+//           fontSize: 11,
+//           color: Colors.white,
+//           fontWeight: FontWeight.w500,
+//         ),
+//       ),
+//     );
+//   }
 
-  Widget _buildEnhancedModeCard({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Gradient gradient,
-    required String mode,
-    required List<String> features,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ChatScreen(mode: mode)),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(icon, size: 32, color: Colors.white),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: features
-                    .map(
-                      (feature) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          feature,
-                          style: GoogleFonts.poppins(
-                            fontSize: 10,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   Widget _buildEnhancedModeCard({
+//     required BuildContext context,
+//     required String title,
+//     required String subtitle,
+//     required IconData icon,
+//     required Gradient gradient,
+//     required String mode,
+//     required List<String> features,
+//   }) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => ChatScreen(mode: mode)),
+//         );
+//       },
+//       child: Container(
+//         decoration: BoxDecoration(
+//           gradient: gradient,
+//           borderRadius: BorderRadius.circular(24),
+//           boxShadow: [
+//             BoxShadow(
+//               color: Colors.black.withOpacity(0.2),
+//               blurRadius: 20,
+//               offset: const Offset(0, 10),
+//             ),
+//           ],
+//         ),
+//         child: Container(
+//           padding: const EdgeInsets.all(24),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Row(
+//                 children: [
+//                   Container(
+//                     padding: const EdgeInsets.all(12),
+//                     decoration: BoxDecoration(
+//                       color: Colors.white.withOpacity(0.3),
+//                       borderRadius: BorderRadius.circular(16),
+//                     ),
+//                     child: Icon(icon, size: 32, color: Colors.white),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           title,
+//                           style: GoogleFonts.poppins(
+//                             fontSize: 20,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                         Text(
+//                           subtitle,
+//                           style: GoogleFonts.poppins(
+//                             fontSize: 12,
+//                             color: Colors.white.withOpacity(0.9),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   const Icon(
+//                     Icons.arrow_forward_ios,
+//                     color: Colors.white,
+//                     size: 20,
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 16),
+//               Wrap(
+//                 spacing: 8,
+//                 runSpacing: 8,
+//                 children: features
+//                     .map(
+//                       (feature) => Container(
+//                         padding: const EdgeInsets.symmetric(
+//                           horizontal: 10,
+//                           vertical: 4,
+//                         ),
+//                         decoration: BoxDecoration(
+//                           color: Colors.white.withOpacity(0.2),
+//                           borderRadius: BorderRadius.circular(12),
+//                         ),
+//                         child: Text(
+//                           feature,
+//                           style: GoogleFonts.poppins(
+//                             fontSize: 10,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                       ),
+//                     )
+//                     .toList(),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class ChatScreen extends StatefulWidget {
-  final String mode;
+  final String mode='real';
 
-  const ChatScreen({Key? key, required this.mode}) : super(key: key);
+ 
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -386,7 +387,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   bool _showQuickQuestions = true;
   late AnimationController _quickQuestionsController;
 
-  final String apiUrl = 'http://10.57.124.241:5050/api/query';
+  final String apiUrl = 'http://192.168.100.171:5050/api/query';
 
   final Map<String, List<String>> _quickQuestions = {
     '📊 Forecasting': [
@@ -440,7 +441,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       _messages.add(
         ChatMessage(
           text: widget.mode == 'real'
-              ? '👋 Hello! I\'m CERBERUS. I provide verified, trustworthy responses backed by Layer 3 detection. Try asking about forecasting, pricing, inventory, or business analytics!'
+              ? 'Hello! I\'m IRIS, your warehouse management assistant. I can help you with analytics, reports, and worker management. How can I assist you today?'
+
               : '🧪 Hello! I\'m CERBERUS in Test Mode. Responses will contain simulated data to demonstrate hallucination detection. Perfect for testing!',
           isUser: false,
           timestamp: DateTime.now(),
@@ -549,77 +551,43 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: widget.mode == 'real'
-                  ? [const Color(0xFF11998E), const Color(0xFF38EF7D)]
-                  : [const Color(0xFFEB3349), const Color(0xFFF45C43)],
-            ),
-          ),
-        ),
-        elevation: 0,
+       appBar: AppBar(
         title: Row(
           children: [
-            Hero(
-              tag: 'iris_logo',
-              child: const Icon(Icons.remove_red_eye, color: Colors.white),
+            Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.visibility,
+                color: AppColors.primaryBlue,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 12),
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CERBERUS Chat',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                  'IRIS Assistant',
+                  style: TextStyle(fontSize: 16),
                 ),
-                Text(
-                  widget.mode == 'real' ? 'Verified Mode' : 'Test Mode',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 11,
-                  ),
-                ),
+                // Text(
+                //   'Admin Mode',
+                //   style: TextStyle(
+                //     fontSize: 10,
+                //     fontWeight: FontWeight.normal,
+                //   ),
+                // ),
               ],
             ),
           ],
         ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  widget.mode == 'real'
-                      ? Icons.check_circle
-                      : Icons.warning_amber,
-                  size: 16,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  widget.mode == 'real' ? 'REAL' : 'TEST',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
+     
       body: Column(
         children: [
           if (_showQuickQuestions) _buildQuickQuestionsSection(),
@@ -793,14 +761,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(
                 widget.mode == 'real'
-                    ? const Color(0xFF11998E)
+                    ? AppColors.primaryBlue
                     : const Color(0xFFEB3349),
               ),
             ),
           ),
           const SizedBox(width: 16),
           Text(
-            'CERBERUS is analyzing...',
+            'IRIS is analyzing...',
             style: GoogleFonts.poppins(color: Colors.grey[600], fontSize: 14),
           ),
         ],
@@ -852,7 +820,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: widget.mode == 'real'
-                    ? [const Color(0xFF11998E), const Color(0xFF38EF7D)]
+                    ? [AppColors.primaryBlue, const Color.fromARGB(255, 90, 158, 252)]
                     : [const Color(0xFFEB3349), const Color(0xFFF45C43)],
               ),
               shape: BoxShape.circle,
@@ -881,7 +849,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Color(0xFF667EEA), AppColors.primaryBlue,],
                 ),
                 shape: BoxShape.circle,
               ),
@@ -944,8 +912,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                           gradient: LinearGradient(
                             colors: widget.mode == 'real'
                                 ? [
-                                    const Color(0xFF11998E),
-                                    const Color(0xFF38EF7D),
+                                    AppColors.primaryBlue,
+                                    const Color.fromARGB(255, 63, 162, 243),
                                   ]
                                 : [
                                     const Color(0xFFEB3349),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iris_app/admin_home.dart';
 import 'package:iris_app/app_colors.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'worker_home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -67,24 +68,99 @@ class _SignInScreenState extends State<SignInScreen>
     super.dispose();
   }
 
-  void _handleSignIn() {
-    if (_formKey.currentState!.validate()) {
-      if (_emailController.text == 'manager@gmail.com' &&
-          _passwordController.text == 'manager123') {
-        Navigator.pushReplacement(
-          context,
-          // MaterialPageRoute(builder: (context) => WorkerHomeScreen()),
-          MaterialPageRoute(builder: (context) => ManagerHomeScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => WorkerHomeScreen()),
+  // void _handleSignIn() {
+  //   if (_formKey.currentState!.validate()) {
+  //     if (_emailController.text == 'manager@gmail.com' &&
+  //         _passwordController.text == 'manager123') {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         // MaterialPageRoute(builder: (context) => WorkerHomeScreen()),
+  //         MaterialPageRoute(builder: (context) => ManagerHomeScreen()),
+  //       );
+  //     } else {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => WorkerHomeScreen()),
+  //       );
+  //     }
+  //   }
+  // }
+Future<void> _handleSignIn() async {
+  if (_formKey.currentState!.validate()) {
+    try {
+      // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Signing in...')),
+      );
+
+      // Query the Staff table to find matching user
+      final response = await Supabase.instance.client
+          .from('Staff')
+          .select('staff_id, email, role, b_id, warehouse_id')
+          .eq('email', _emailController.text.trim())
+          .eq('password', _passwordController.text)
+          .maybeSingle();
+
+      if (response == null) {
+        // No matching user found
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Invalid email or password'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      // User found, check role and navigate
+      final role = response['role'] as int;
+      
+      if (mounted) {
+        if (role == 2) {
+          // Manager role
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ManagerHomeScreen(
+                staffData: response, // Pass user data if needed
+              ),
+            ),
+          );
+        } else if (role == 4) {
+          // Worker role
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WorkerHomeScreen(
+                staffData: response, // Pass user data if needed
+              ),
+            ),
+          );
+        } else {
+          // Invalid role
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Access denied: Invalid role'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Handle errors
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error signing in: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

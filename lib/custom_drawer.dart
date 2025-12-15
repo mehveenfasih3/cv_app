@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:iris_app/admin_edit_profile.dart';
 import 'package:iris_app/app_colors.dart';
 import 'package:iris_app/edit_profile_screen.dart';
 import 'package:iris_app/sign_in.dart';
 
-class CustomDrawer extends StatelessWidget {
-  final String userName;
-  final String userEmail;
+import 'package:provider/provider.dart';
+class CustomDrawer extends StatefulWidget {
+  final Map<String, dynamic> staffData;
 
-  const CustomDrawer({
-    Key? key,
-    required this.userName,
-    required this.userEmail,
-  }) : super(key: key);
+  CustomDrawer({Key? key, required this.staffData}) : super(key: key);
+
+ 
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  get staffData => widget.staffData;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    // final themeProvider = Provider.of<ThemeProvider>(context);
+   
+
+
 
     return Drawer(
       child: Column(
         children: [
-          // User Header
+          // Admin Header
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: AppColors.primaryBlue,
-            ),
+            decoration: const BoxDecoration(color: AppColors.primaryBlue),
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,14 +41,14 @@ class CustomDrawer extends StatelessWidget {
                     radius: 40,
                     backgroundColor: AppColors.white,
                     child: Icon(
-                      Icons.person,
+                      Icons.admin_panel_settings,
                       size: 40,
                       color: AppColors.primaryBlue,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    userName,
+                    staffData['email'].toString().split('@')[0],
                     style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 20,
@@ -52,17 +57,32 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    userEmail,
+                    staffData['email'] ?? 'No email provided',
                     style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'Worker',
+                      style: TextStyle(color: AppColors.white, fontSize: 12),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          
+
           // Menu Items
           Expanded(
             child: ListView(
@@ -76,12 +96,15 @@ class CustomDrawer extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditProfileScreen(),
+                        builder: (context) =>  EditAdminProfileScreen(
+                          staffData:widget.staffData,
+                        ),
                       ),
                     );
                   },
                 ),
                 const Divider(),
+
                 // ListTile(
                 //   leading: Icon(
                 //     themeProvider.isDarkMode
@@ -99,6 +122,13 @@ class CustomDrawer extends StatelessWidget {
                 // ),
                 const Divider(),
                 ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.help_outline),
                   title: const Text('Help & Support'),
                   onTap: () {
@@ -115,7 +145,7 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Logout
           const Divider(),
           ListTile(
@@ -125,7 +155,6 @@ class CustomDrawer extends StatelessWidget {
               style: TextStyle(color: AppColors.error),
             ),
             onTap: () {
-              // Handle logout
               Navigator.pop(context);
               showDialog(
                 context: context,
@@ -139,12 +168,7 @@ class CustomDrawer extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
-                        
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SignInScreen()),
-                        );
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen(),));
                       },
                       child: const Text('Logout'),
                     ),
@@ -159,3 +183,4 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 }
+  

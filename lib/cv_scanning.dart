@@ -621,16 +621,6 @@
 //   });
 // }
 
-import 'dart:typed_data';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-import 'dart:convert';
-import 'dart:async';
-import 'package:image/image.dart' as img;
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -651,168 +641,635 @@ import 'package:image/image.dart' as img;
 //   }
 // }
 
-class CameraScreen extends StatefulWidget {
+
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:iris_app/app_colors.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+late List<CameraDescription> cameras;
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   cameras = await availableCameras();
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: CameraPage(),
+//     );
+//   }
+// }
+
+
+class CameraPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  const CameraScreen({Key? key, required this.cameras}) : super(key: key);
+  
+  const CameraPage({Key? key, required this.cameras}) : super(key: key);
 
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  _CameraPageState createState() => _CameraPageState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
-  CameraController? _controller;
-  bool _isDetecting = false;
-  List detections = [];
+class _CameraPageState extends State<CameraPage> {
+  CameraController? controller;
+  final supabase = Supabase.instance.client;
+  
+  bool isProcessing = false;
+  bool _isCameraInitialized = false;
+  Timer? _detectionTimer;
+  
+  // Store detected objects with their counts
+  Map<String, int> _detectedObjects = {};
+  String resultText = "";
 
   @override
   void initState() {
     super.initState();
-    _initCamera();
+    _initializeCamera();
   }
 
-  void _initCamera() async {
-    if (widget.cameras.isEmpty) return;
+  Future<void> _initializeCamera() async {
+    try {
+      if (widget.cameras.isEmpty) {
+        _showError('No cameras available');
+        return;
+      }
 
-    _controller = CameraController(
-      widget.cameras[0],
-      ResolutionPreset.medium, // keep medium for same quality as before
-      enableAudio: false,
-    );
+      controller = CameraController(
+        widget.cameras[0],
+        ResolutionPreset.high,
+        enableAudio: false,
+      );
 
-    await _controller!.initialize();
-    if (!mounted) return;
-    setState(() {});
+      await controller!.initialize();
+      
+      if (!mounted) return;
+      
+      setState(() {
+        _isCameraInitialized = true;
+      });
 
-    // Start continuous image stream
-    _controller!.startImageStream((CameraImage image) {
-      if (!_isDetecting) _processCameraImage(image);
+      // Start auto-detection every 2 seconds
+      _startAutoDetection();
+    } catch (e) {
+      _showError('Camera initialization failed: $e');
+    }
+  }
+
+  void _startAutoDetection() {
+    _detectionTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (_isCameraInitialized && !isProcessing && mounted) {
+        captureAndDetect();
+      }
     });
   }
 
-  void _processCameraImage(CameraImage image) async {
-    _isDetecting = true;
+  Future<void> captureAndDetect() async {
+    if (controller == null || !controller!.value.isInitialized) return;
+    if (controller!.value.isTakingPicture) return;
+    if (isProcessing) return;
+
+    setState(() => isProcessing = true);
 
     try {
-      // Convert CameraImage to JPEG
-      final jpegBytes = _convertYUV420ToJPEG(image);
+      final image = await controller!.takePicture();
+      Uint8List bytes = await image.readAsBytes();
+      String base64Image = base64Encode(bytes);
 
-      // Send to Flask backend
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('http://192.168.100.171:5000/detect'),
-      );
-      request.files.add(
-        http.MultipartFile.fromBytes('image', jpegBytes, filename: 'frame.jpg'),
+      final response = await http.post(
+        Uri.parse("http://192.168.100.171:5000/detect"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"image": base64Image}),
       );
 
-      var response = await request.send().timeout(Duration(seconds: 5));
-      final resStr = await response.stream.bytesToString();
-      final jsonResponse = json.decode(resStr);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data["success"] == true) {
+          List detections = data["detections"] ?? [];
+
+          if (detections.isNotEmpty) {
+            // Update detection counts
+            for (var detection in detections) {
+              String className = detection['class'];
+              double confidence = (detection['confidence'] as num).toDouble();
+              
+              // Only count detections with confidence > 50%
+              if (confidence > 0.5) {
+                _detectedObjects[className] = (_detectedObjects[className] ?? 0) + 1;
+              }
+            }
+
+            setState(() {
+              resultText = detections
+                  .map((e) => "${e['class']} (${(e['confidence'] as num).toStringAsFixed(2)})")
+                  .join("\n");
+            });
+          } else {
+            setState(() => resultText = "No objects detected");
+          }
+        } else {
+          setState(() => resultText = "Detection failed");
+        }
+      } else {
+        setState(() => resultText = "Server error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Detection error: $e");
+      setState(() => resultText = "Error: $e");
+    } finally {
+      if (mounted) {
+        setState(() => isProcessing = false);
+      }
+    }
+  }
+
+  Future<void> _saveToDatabaseAndFinalize() async {
+    if (_detectedObjects.isEmpty) {
+      _showError('No objects detected to save');
+      return;
+    }
+
+    try {
+      _showLoadingDialog();
+
+      final today = DateTime.now();
+      final todayDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+      // Fetch all categories from database
+      final categoriesResponse = await supabase
+          .from('categories')
+          .select('id, name');
+
+      // Create a map of category names to IDs (case-insensitive)
+      Map<String, int> categoryMap = {};
+      for (var category in categoriesResponse) {
+        categoryMap[category['name'].toString().toLowerCase()] = category['id'];
+      }
+
+      // Prepare batch insert/update operations
+      List<Map<String, dynamic>> recordsToInsert = [];
+      List<String> notFoundCategories = [];
+
+      for (var entry in _detectedObjects.entries) {
+        String objectName = entry.key;
+        int count = entry.value;
+        
+        // Find matching category ID (case-insensitive)
+        int? categoryId = categoryMap[objectName.toLowerCase()];
+        
+        if (categoryId != null) {
+          // Check if record already exists for today
+          final existingRecord = await supabase
+              .from('product_count')
+              .select('scanning_count')
+              .eq('category_id', categoryId)
+              .maybeSingle();
+
+          if (existingRecord != null) {
+            // Update existing record (add to existing count)
+            final newCount = (existingRecord['scanning_count'] ?? 0) + count;
+            await supabase
+                .from('product_count')
+                .update({
+                  'scanning_count': newCount,
+                })
+                .eq('category_id', categoryId);
+          } else {
+            // Insert new record
+            recordsToInsert.add({
+              'category_id': categoryId,
+              'scanning_count': count,
+            });
+          }
+        } else {
+          notFoundCategories.add(objectName);
+        }
+      }
+
+      // Batch insert new records
+      if (recordsToInsert.isNotEmpty) {
+        await supabase.from('product_count').insert(recordsToInsert);
+      }
 
       if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+
+        // Show success message
+        String message = 'Saved ${_detectedObjects.length - notFoundCategories.length} categories to database';
+        if (notFoundCategories.isNotEmpty) {
+          message += '\n\nNot found in categories: ${notFoundCategories.join(", ")}';
+        }
+
+        _showSuccessDialog(message);
+        
+        // Clear detection data after successful save
         setState(() {
-          detections = jsonResponse['detections'] ?? [];
+          _detectedObjects.clear();
+          resultText = "";
         });
       }
     } catch (e) {
-      print("Error sending frame: $e");
-    }
-
-    await Future.delayed(Duration(milliseconds: 500)); // throttle FPS
-    _isDetecting = false;
-  }
-
-  Uint8List _convertYUV420ToJPEG(CameraImage image) {
-    final width = image.width;
-    final height = image.height;
-    final img.Image img1 = img.Image(width: width, height: height);
-
-    final planeY = image.planes[0];
-    final planeU = image.planes[1];
-    final planeV = image.planes[2];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        final yp = planeY.bytes[y * planeY.bytesPerRow + x];
-        final up = planeU.bytes[(y ~/ 2) * planeU.bytesPerRow + (x ~/ 2)];
-        final vp = planeV.bytes[(y ~/ 2) * planeV.bytesPerRow + (x ~/ 2)];
-
-        int r = (yp + 1.402 * (vp - 128)).toInt();
-        int g = (yp - 0.344136 * (up - 128) - 0.714136 * (vp - 128)).toInt();
-        int b = (yp + 1.772 * (up - 128)).toInt();
-
-        r = r.clamp(0, 255);
-        g = g.clamp(0, 255);
-        b = b.clamp(0, 255);
-
-        img1.setPixelRgb(x, y, r, g, b);
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        _showError('Error saving to database: $e');
       }
     }
-
-    return img.encodeJpg(img1, quality: 80);
   }
 
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Saving to database...'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_controller == null || !_controller!.value.isInitialized) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    final size = _controller!.value.previewSize!;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight =
-        screenWidth * size.height / size.width; // maintain aspect ratio
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          CameraPreview(_controller!),
-          ..._buildBoundingBoxes(screenWidth, screenHeight),
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.check_circle, color: AppColors.success),
+            SizedBox(width: 8),
+            Text('Success'),
+          ],
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildBoundingBoxes(double screenWidth, double screenHeight) {
-    if (detections.isEmpty) return [];
-
-    return detections.map((det) {
-      final bbox = det['bbox']; // [x1, y1, x2, y2]
-      double left = bbox[0] / 840 * screenWidth; // model input assumed 640x640
-      double top = bbox[1] / 840 * screenHeight;
-      double width = (bbox[2] - bbox[0]) / 840 * screenWidth;
-      double height = (bbox[3] - bbox[1]) / 840 * screenHeight;
-
-      return Positioned(
-        left: left,
-        top: top,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.red, width: 2),
-          ),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              color: Colors.red,
-              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              child: Text(
-                "${det['class']} ${(det['confidence'] * 100).toStringAsFixed(0)}%",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-          ),
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.error,
+          duration: const Duration(seconds: 3),
         ),
       );
-    }).toList();
+    }
+  }
+
+  @override
+  void dispose() {
+    _detectionTimer?.cancel();
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isCameraInitialized || controller == null) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Camera Preview (Full Screen)
+            Positioned.fill(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: controller!.value.previewSize!.height,
+                  height: controller!.value.previewSize!.width,
+                  child: CameraPreview(controller!),
+                ),
+              ),
+            ),
+
+            // Detection Indicator
+            if (isProcessing)
+              Positioned(
+                top: 16,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBlue.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Detecting...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+            // Detection Results Panel (Bottom)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.85),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Handle Bar
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade600,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+
+                    // Title
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Detected Objects',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryBlue,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '${_detectedObjects.length} items',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Detection List
+                    Flexible(
+                      child: _detectedObjects.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.center_focus_weak,
+                                    size: 48,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Point camera at objects',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Auto-detecting every 2 seconds',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              itemCount: _detectedObjects.length,
+                              itemBuilder: (context, index) {
+                                final entry = _detectedObjects.entries.elementAt(index);
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.2),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primaryBlue,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: const Icon(
+                                          Icons.inventory_2,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          entry.key,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.success,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          '${entry.value}x',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+
+                    // Action Buttons
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _detectedObjects.isEmpty
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _detectedObjects.clear();
+                                        resultText = "";
+                                      });
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red.shade700,
+                                disabledBackgroundColor: Colors.grey.shade700,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Clear',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                              onPressed: _detectedObjects.isEmpty
+                                  ? null
+                                  : _saveToDatabaseAndFinalize,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.success,
+                                disabledBackgroundColor: Colors.grey.shade700,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.save, color: Colors.white),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Save to Database',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Back Button
+            Positioned(
+              top: 16,
+              left: 16,
+              child: CircleAvatar(
+                backgroundColor: Colors.black.withOpacity(0.5),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
