@@ -79,7 +79,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
     }
   }
 
-  Future<void> _updateTaskStatus(String taskId, String staffId, bool isCompleted) async {
+  Future<void> _updateTaskStatus(String taskId,String sectionId, String staffId, bool isCompleted) async {
     try {
       final newStatus = isCompleted ? 'completed' : 'pending';
       final completionTime = isCompleted ? TimeOfDay.now().format(context) : null;
@@ -91,6 +91,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
             'completion_time': completionTime,
           })
           .eq('task_id', taskId)
+          .eq('section_id', sectionId)
           .eq('staff_id', staffId);
 
       // Refresh the task list
@@ -156,12 +157,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
             onPressed: _fetchTasks,
             tooltip: 'Refresh',
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              // Handle notifications
-            },
-          ),
+        
         ],
       ),
       drawer: CustomDrawer(
@@ -245,6 +241,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
                                 onChanged: (value) {
                                   _updateTaskStatus(
                                     taskData['task_id'].toString(),
+                                    section['section_id'].toString(),
                                     widget.staffData['staff_id'].toString(),
                                     value!,
                                   );
@@ -419,7 +416,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CameraPage(cameras: cameras,),
+                  builder: (context) => CameraPage(cameras: cameras,staffData: widget.staffData,),
                 ),
               );
               break;
@@ -435,7 +432,7 @@ class _WorkerHomeScreenState extends State<WorkerHomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatScreen(),
+                  builder: (context) => ChatScreen(staffData: widget.staffData,role:"worker"),
                 ),
               );
               break;

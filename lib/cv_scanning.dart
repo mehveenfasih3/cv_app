@@ -1,648 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:iris_app/app_colors.dart';
-
-// class CVScanningScreen extends StatefulWidget {
-//   const CVScanningScreen({Key? key}) : super(key: key);
-
-//   @override
-//   State<CVScanningScreen> createState() => _CVScanningScreenState();
-// }
-
-// class _CVScanningScreenState extends State<CVScanningScreen> {
-//   bool _isScanning = false;
-
-//   void _startScanning() {
-//     setState(() {
-//       _isScanning = true;
-//     });
-
-//     // Simulate scanning process
-//     Future.delayed(const Duration(seconds: 3), () {
-//       if (mounted) {
-//         setState(() {
-//           _isScanning = false;
-//         });
-//         _showScanResult();
-//       }
-//     });
-//   }
-
-//   void _showScanResult() {
-//     showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         title: const Text('Scan Result'),
-//         content: const Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Item: Electronics Box #A123'),
-//             SizedBox(height: 8),
-//             Text('Location: Warehouse A, Section B'),
-//             SizedBox(height: 8),
-//             Text('Quantity: 25 units'),
-//             SizedBox(height: 8),
-//             Text('Status: ✓ Verified'),
-//           ],
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.pop(context),
-//             child: const Text('Close'),
-//           ),
-//           ElevatedButton(
-//             onPressed: () {
-//               Navigator.pop(context);
-//               _startScanning();
-//             },
-//             child: const Text('Scan Again'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('CV Scanning'),
-//       ),
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(24.0),
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               // Scanning Animation/Image
-//               Container(
-//                 width: 280,
-//                 height: 280,
-//                 decoration: BoxDecoration(
-//                   color: _isScanning
-//                       ? AppColors.primaryBlue.withOpacity(0.1)
-//                       : Colors.transparent,
-//                   borderRadius: BorderRadius.circular(20),
-//                   border: Border.all(
-//                     color: AppColors.primaryBlue,
-//                     width: 3,
-//                   ),
-//                 ),
-//                 child: _isScanning
-//                     ? Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           const CircularProgressIndicator(
-//                             color: AppColors.primaryBlue,
-//                             strokeWidth: 3,
-//                           ),
-//                           const SizedBox(height: 20),
-//                           Text(
-//                             'Scanning...',
-//                             style: TextStyle(
-//                               color: AppColors.primaryBlue,
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                           ),
-//                         ],
-//                       )
-//                     : Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Image.network(
-//                             'https://via.placeholder.com/150/0066B3/FFFFFF?text=CV',
-//                             width: 150,
-//                             height: 150,
-//                             errorBuilder: (context, error, stackTrace) {
-//                               return Icon(
-//                                 Icons.qr_code_scanner,
-//                                 size: 120,
-//                                 color: AppColors.primaryBlue,
-//                               );
-//                             },
-//                           ),
-//                           const SizedBox(height: 16),
-//                           const Text(
-//                             'Computer Vision Scanner',
-//                             style: TextStyle(
-//                               fontSize: 16,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                             textAlign: TextAlign.center,
-//                           ),
-//                         ],
-//                       ),
-//               ),
-//               const SizedBox(height: 40),
-//               const Text(
-//                 'Position the camera to scan items',
-//                 style: TextStyle(
-//                   fontSize: 16,
-//                   color: AppColors.textSecondary,
-//                 ),
-//                 textAlign: TextAlign.center,
-//               ),
-//               const SizedBox(height: 32),
-//               SizedBox(
-//                 width: double.infinity,
-//                 child: ElevatedButton(
-//                   onPressed: _isScanning ? null : _startScanning,
-//                   style: ElevatedButton.styleFrom(
-//                     padding: const EdgeInsets.symmetric(vertical: 16),
-//                     disabledBackgroundColor: AppColors.mediumGrey,
-//                   ),
-//                   child: Text(
-//                     _isScanning ? 'Scanning...' : 'Start Scanning',
-//                     style: const TextStyle(
-//                       fontSize: 18,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 16),
-//               Card(
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(16.0),
-//                   child: Column(
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.info_outline,
-//                             color: AppColors.info,
-//                           ),
-//                           const SizedBox(width: 12),
-//                           const Expanded(
-//                             child: Text(
-//                               'Tips for better scanning:',
-//                               style: TextStyle(
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       const SizedBox(height: 12),
-//                       const Text(
-//                         '• Ensure good lighting\n'
-//                         '• Hold camera steady\n'
-//                         '• Keep item in frame\n'
-//                         '• Avoid shadows',
-//                         style: TextStyle(
-//                           color: AppColors.textSecondary,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// import 'dart:async';
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:camera/camera.dart';
-// import 'package:tflite_flutter/tflite_flutter.dart';
-// import 'package:image/image.dart' as img;
-// import 'package:flutter/services.dart';
-// import 'dart:typed_data';
-
-// class CVScanningScreen extends StatefulWidget {
-//   const CVScanningScreen({Key? key}) : super(key: key);
-
-//   @override
-//   State<CVScanningScreen> createState() => _CVScanningScreenState();
-// }
-
-// class _CVScanningScreenState extends State<CVScanningScreen> {
-//   CameraController? _cameraController;
-//   Interpreter? _interpreter;
-//   List<String> _labels = [];
-  
-//   bool _isDetecting = false;
-//   bool _isModelLoaded = false;
-//   List<DetectionResult> _detections = [];
-  
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializeCamera();
-//     _loadModel();
-//   }
-
-//   Future<void> _initializeCamera() async {
-//     final cameras = await availableCameras();
-//     if (cameras.isEmpty) return;
-
-//     _cameraController = CameraController(
-//       cameras[0],
-//       ResolutionPreset.medium,
-//       enableAudio: false,
-//     );
-
-//     await _cameraController!.initialize();
-    
-//     // Start image stream
-//     _cameraController!.startImageStream((image) {
-//       if (!_isDetecting && _isModelLoaded) {
-//         _isDetecting = true;
-//         _runModelOnFrame(image);
-//       }
-//     });
-    
-//     setState(() {});
-//   }
-
-//   Future<void> _loadModel() async {
-//     try {
-//       // Load TFLite model
-//       _interpreter = await Interpreter.fromAsset('assets/models/best.tflite');
-      
-//       // Load labels
-//       final labelsData = await rootBundle.loadString('assets/models/labels.txt');
-//       _labels = labelsData.split('\n').where((label) => label.isNotEmpty).toList();
-      
-//       setState(() {
-//         _isModelLoaded = true;
-//       });
-      
-//       print('✅ Model loaded successfully!');
-//       print('📦 Loaded ${_labels.length} classes: $_labels');
-//     } catch (e) {
-//       print('❌ Error loading model: $e');
-//     }
-//   }
-
-//   Future<void> _runModelOnFrame(CameraImage image) async {
-//     if (_interpreter == null) {
-//       _isDetecting = false;
-//       return;
-//     }
-
-//     try {
-//       // Convert CameraImage to img.Image
-//       final imgImage = _convertCameraImage(image);
-//       if (imgImage == null) {
-//         _isDetecting = false;
-//         return;
-//       }
-
-//       // Resize to model input size (640x640 for YOLO)
-//       final resized = img.copyResize(imgImage, width: 640, height: 640);
-
-//       // Convert to Float32List (normalized 0-1)
-//       final input = _imageToByteListFloat32(resized);
-
-//       // Prepare output buffer
-//       // YOLO output shape: [1, 25200, 85] for 80 classes
-//       // [1, 25200, (4 bbox + 1 conf + num_classes)]
-//       final numClasses = _labels.length;
-//       final output = List.generate(
-//         1,
-//         (_) => List.generate(
-//           25200,
-//           (_) => List.filled(4 + 1 + numClasses, 0.0),
-//         ),
-//       );
-
-//       // Run inference
-//       _interpreter!.run(input, output);
-
-//       // Parse detections
-//       final detections = _parseYOLOOutput(output[0], 0.35); // 0.35 confidence threshold
-
-//       setState(() {
-//         _detections = detections;
-//       });
-//     } catch (e) {
-//       print('Error during detection: $e');
-//     }
-
-//     _isDetecting = false;
-//   }
-
-//   img.Image? _convertCameraImage(CameraImage image) {
-//     try {
-//       if (image.format.group == ImageFormatGroup.yuv420) {
-//         return _convertYUV420(image);
-//       } else if (image.format.group == ImageFormatGroup.bgra8888) {
-//         return _convertBGRA8888(image);
-//       }
-//       return null;
-//     } catch (e) {
-//       print('Error converting image: $e');
-//       return null;
-//     }
-//   }
-
-//   img.Image _convertYUV420(CameraImage image) {
-//     final width = image.width;
-//     final height = image.height;
-//     final yPlane = image.planes[0];
-//     final uPlane = image.planes[1];
-//     final vPlane = image.planes[2];
-
-//     final imgImage = img.Image(width: width, height: height);
-
-//     for (int y = 0; y < height; y++) {
-//       for (int x = 0; x < width; x++) {
-//         final yIndex = y * yPlane.bytesPerRow + x;
-//         final uvIndex = (y ~/ 2) * uPlane.bytesPerRow + (x ~/ 2);
-
-//         final yValue = yPlane.bytes[yIndex];
-//         final uValue = uPlane.bytes[uvIndex];
-//         final vValue = vPlane.bytes[uvIndex];
-
-//         final r = (yValue + 1.402 * (vValue - 128)).clamp(0, 255).toInt();
-//         final g = (yValue - 0.344136 * (uValue - 128) - 0.714136 * (vValue - 128))
-//             .clamp(0, 255)
-//             .toInt();
-//         final b = (yValue + 1.772 * (uValue - 128)).clamp(0, 255).toInt();
-
-//         imgImage.setPixelRgba(x, y, r, g, b, 255);
-//       }
-//     }
-
-//     return imgImage;
-//   }
-
-//   img.Image _convertBGRA8888(CameraImage image) {
-//     return img.Image.fromBytes(
-//       width: image.width,
-//       height: image.height,
-//       bytes: image.planes[0].bytes.buffer,
-//       format: img.Format.uint8,
-//     );
-//   }
-
-//   Float32List _imageToByteListFloat32(img.Image image) {
-//     final convertedBytes = Float32List(1 * 640 * 640 * 3);
-//     final buffer = Float32List.view(convertedBytes.buffer);
-//     int pixelIndex = 0;
-
-//     for (int y = 0; y < 640; y++) {
-//       for (int x = 0; x < 640; x++) {
-//         final pixel = image.getPixel(x, y);
-//         buffer[pixelIndex++] = pixel.r / 255.0;
-//         buffer[pixelIndex++] = pixel.g / 255.0;
-//         buffer[pixelIndex++] = pixel.b / 255.0;
-//       }
-//     }
-
-//     return convertedBytes;
-//   }
-
-//   List<DetectionResult> _parseYOLOOutput(List<List<double>> output, double threshold) {
-//     List<DetectionResult> detections = [];
-
-//     for (var detection in output) {
-//       // detection format: [x, y, w, h, confidence, class_scores...]
-//       final confidence = detection[4];
-      
-//       if (confidence < threshold) continue;
-
-//       // Find class with highest score
-//       int classId = 0;
-//       double maxScore = 0;
-//       for (int i = 5; i < detection.length; i++) {
-//         if (detection[i] > maxScore) {
-//           maxScore = detection[i];
-//           classId = i - 5;
-//         }
-//       }
-
-//       final finalConfidence = confidence * maxScore;
-//       if (finalConfidence < threshold) continue;
-
-//       detections.add(DetectionResult(
-//         classId: classId,
-//         className: classId < _labels.length ? _labels[classId] : 'Unknown',
-//         confidence: finalConfidence,
-//         bbox: [
-//           detection[0] - detection[2] / 2, // x1
-//           detection[1] - detection[3] / 2, // y1
-//           detection[0] + detection[2] / 2, // x2
-//           detection[1] + detection[3] / 2, // y2
-//         ],
-//       ));
-//     }
-
-//     // Apply NMS (Non-Maximum Suppression)
-//     return _applyNMS(detections, 0.4);
-//   }
-
-//   List<DetectionResult> _applyNMS(List<DetectionResult> detections, double iouThreshold) {
-//     detections.sort((a, b) => b.confidence.compareTo(a.confidence));
-    
-//     List<DetectionResult> filtered = [];
-    
-//     for (var detection in detections) {
-//       bool keep = true;
-//       for (var kept in filtered) {
-//         if (_calculateIOU(detection.bbox, kept.bbox) > iouThreshold) {
-//           keep = false;
-//           break;
-//         }
-//       }
-//       if (keep) filtered.add(detection);
-//     }
-    
-//     return filtered;
-//   }
-
-//   double _calculateIOU(List<double> box1, List<double> box2) {
-//     final x1 = box1[0] > box2[0] ? box1[0] : box2[0];
-//     final y1 = box1[1] > box2[1] ? box1[1] : box2[1];
-//     final x2 = box1[2] < box2[2] ? box1[2] : box2[2];
-//     final y2 = box1[3] < box2[3] ? box1[3] : box2[3];
-
-//     final intersection = (x2 - x1).clamp(0, double.infinity) * 
-//                         (y2 - y1).clamp(0, double.infinity);
-    
-//     final area1 = (box1[2] - box1[0]) * (box1[3] - box1[1]);
-//     final area2 = (box2[2] - box2[0]) * (box2[3] - box2[1]);
-//     final union = area1 + area2 - intersection;
-
-//     return union > 0 ? intersection / union : 0;
-//   }
-
-//   @override
-//   void dispose() {
-//     _cameraController?.dispose();
-//     _interpreter?.close();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_cameraController == null || !_cameraController!.value.isInitialized) {
-//       return Scaffold(
-//         appBar: AppBar(title: const Text('CV Scanning')),
-//         body: const Center(child: CircularProgressIndicator()),
-//       );
-//     }
-
-//     final size = MediaQuery.of(context).size;
-//     final deviceRatio = size.width / size.height;
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Live Object Detection'),
-//         actions: [
-//           if (_isModelLoaded)
-//             const Padding(
-//               padding: EdgeInsets.all(16.0),
-//               child: Icon(Icons.check_circle, color: Colors.green),
-//             ),
-//         ],
-//       ),
-//       body: Stack(
-//         children: [
-//           // Camera Preview
-//           SizedBox(
-//             width: size.width,
-//             height: size.height,
-//             child: FittedBox(
-//               fit: BoxFit.cover,
-//               child: SizedBox(
-//                 width: 100,
-//                 child: CameraPreview(_cameraController!),
-//               ),
-//             ),
-//           ),
-
-//           // Detection Overlays
-//           ..._buildDetectionBoxes(size),
-
-//           // Detection Count
-//           Positioned(
-//             top: 16,
-//             left: 16,
-//             child: Container(
-//               padding: const EdgeInsets.all(12),
-//               decoration: BoxDecoration(
-//                 color: Colors.black87,
-//                 borderRadius: BorderRadius.circular(8),
-//               ),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     'Detections: ${_detections.length}',
-//                     style: const TextStyle(
-//                       color: Colors.white,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   ..._buildDetectionList(),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   List<Widget> _buildDetectionBoxes(Size screenSize) {
-//     return _detections.map((detection) {
-//       final left = detection.bbox[0] * screenSize.width;
-//       final top = detection.bbox[1] * screenSize.height;
-//       final width = (detection.bbox[2] - detection.bbox[0]) * screenSize.width;
-//       final height = (detection.bbox[3] - detection.bbox[1]) * screenSize.height;
-
-//       return Positioned(
-//         left: left,
-//         top: top,
-//         child: Container(
-//           width: width,
-//           height: height,
-//           decoration: BoxDecoration(
-//             border: Border.all(color: Colors.green, width: 3),
-//             borderRadius: BorderRadius.circular(8),
-//           ),
-//           child: Container(
-//             padding: const EdgeInsets.all(4),
-//             decoration: BoxDecoration(
-//               color: Colors.green,
-//               borderRadius: BorderRadius.circular(4),
-//             ),
-//             child: Text(
-//               '${detection.className} ${(detection.confidence * 100).toStringAsFixed(0)}%',
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontSize: 12,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//           ),
-//         ),
-//       );
-//     }).toList();
-//   }
-
-//   List<Widget> _buildDetectionList() {
-//     final counts = <String, int>{};
-//     for (var detection in _detections) {
-//       counts[detection.className] = (counts[detection.className] ?? 0) + 1;
-//     }
-
-//     return counts.entries.map((entry) {
-//       return Padding(
-//         padding: const EdgeInsets.only(top: 4),
-//         child: Text(
-//           '${entry.key}: ${entry.value}',
-//           style: const TextStyle(color: Colors.white),
-//         ),
-//       );
-//     }).toList();
-//   }
-// }
-
-// class DetectionResult {
-//   final int classId;
-//   final String className;
-//   final double confidence;
-//   final List<double> bbox; // [x1, y1, x2, y2] normalized 0-1
-
-//   DetectionResult({
-//     required this.classId,
-//     required this.className,
-//     required this.confidence,
-//     required this.bbox,
-//   });
-// }
-
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   final cameras = await availableCameras();
-//   runApp(MyApp(cameras: cameras));
-// }
-
-// class MyApp extends StatelessWidget {
-//   final List<CameraDescription> cameras;
-//   const MyApp({Key? key, required this.cameras}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: CameraScreen(cameras: cameras),
-//     );
-//   }
-// }
-
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -652,29 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:iris_app/app_colors.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-late List<CameraDescription> cameras;
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   cameras = await availableCameras();
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: CameraPage(),
-//     );
-//   }
-// }
-
-
 class CameraPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  
-  const CameraPage({Key? key, required this.cameras}) : super(key: key);
+  final Map<String, dynamic> staffData;
+
+  const CameraPage({Key? key, required this.cameras, required this.staffData})
+    : super(key: key);
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -683,20 +21,462 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   CameraController? controller;
   final supabase = Supabase.instance.client;
-  
+  get staffData => widget.staffData;
+
   bool isProcessing = false;
   bool _isCameraInitialized = false;
   Timer? _detectionTimer;
-  
-  // Store detected objects with their counts
+
+  String? _selectedModelType; // 'entrance_exit' or 'warehouse'
+  String? _selectedSection; // 'chocolates', 'snacks', etc.
+  String? _movementType; // 'IN' or 'OUT'
+  String _modelDisplayName = "";
+
+  // Warehouse mode: class_name → count
   Map<String, int> _detectedObjects = {};
+
+  // Entrance/Exit mode: product_name → full QR field map
+  // {
+  //   'kitkat_chocolate': {
+  //     'qty': 16, 'type': 'IN', 'warehouse_id': 25,
+  //     'date': '2026-04-13', 'expiry_date': '2027-10-08',
+  //     'cost_price': 70, 'raw': '<original qr string>'
+  //   }
+  // }
+  Map<String, Map<String, dynamic>> _qrDetectedItems = {};
+
   String resultText = "";
+
+  // ─────────────────────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────────────────────
 
   @override
   void initState() {
     super.initState();
-    _initializeCamera();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showModelSelectionDialog();
+    });
   }
+
+  // ─────────────────────────────────────────────────────────────
+  // QR TEXT PARSER
+  //
+  // Handles both ':' and '=' as delimiters so it works with:
+  //   product:kitkat_chocolate
+  //   quantity:16
+  //   type:IN
+  //   warehouse_id:25
+  //   date:2026-04-13
+  //   expiry_date:2027-10-08
+  //   cost_price:70          ← or cost_price=70
+  // ─────────────────────────────────────────────────────────────
+  Map<String, String> _parseQRText(String qrText) {
+    final Map<String, String> result = {};
+    for (final rawLine in qrText.split('\n')) {
+      final line = rawLine.trim();
+      if (line.isEmpty) continue;
+
+      // Try ':' first, then '='
+      int idx = line.indexOf(':');
+      if (idx == -1) idx = line.indexOf('=');
+      if (idx == -1) continue;
+
+      final key = line.substring(0, idx).trim().toLowerCase();
+      final value = line.substring(idx + 1).trim();
+      result[key] = value;
+    }
+    return result;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // SAFE TYPE HELPERS
+  // ─────────────────────────────────────────────────────────────
+
+  /// Converts String, int, or double safely to int.
+  int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return double.tryParse(value)?.toInt();
+    return null;
+  }
+
+  /// Converts String or num safely to double.
+  double? _toDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // DIALOGS
+  // ─────────────────────────────────────────────────────────────
+
+  Future<void> _showModelSelectionDialog() async {
+    final result = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.tune_rounded,
+                      color: AppColors.primaryBlue,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Detection Mode',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'Select a mode to continue',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Divider(height: 1),
+              const SizedBox(height: 24),
+              _buildDialogOption(
+                title: 'Entrance / Exit',
+                description: 'Scan QR codes & manage entry items',
+                icon: Icons.qr_code_scanner_rounded,
+                value: 'entrance_exit',
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 12),
+              _buildDialogOption(
+                title: 'Warehouse',
+                description: 'Detect & classify product sections',
+                icon: Icons.inventory_2_rounded,
+                value: 'warehouse',
+                color: Colors.green,
+              ),
+              const SizedBox(height: 24),
+              _cancelButton(() => Navigator.pop(context)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (result == 'entrance_exit') {
+      await _showMovementTypeDialog();
+    } else if (result == 'warehouse') {
+      await _showWarehouseSectionDialog();
+    } else {
+      if (mounted) Navigator.pop(context);
+    }
+  }
+
+  Future<void> _showMovementTypeDialog() async {
+    final result = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dialogHeader(
+                icon: Icons.swap_horiz_rounded,
+                color: Colors.blue,
+                title: 'Movement Type',
+                subtitle: 'Entry or Exit?',
+                onBack: () {
+                  Navigator.pop(context);
+                  _showModelSelectionDialog();
+                },
+              ),
+              const SizedBox(height: 24),
+              const Divider(height: 1),
+              const SizedBox(height: 24),
+              _buildDialogOption(
+                title: 'Entry (Stock IN)',
+                description: 'Products entering the warehouse',
+                icon: Icons.login_rounded,
+                value: 'IN',
+                color: Colors.green,
+                tinted: true,
+              ),
+              const SizedBox(height: 12),
+              _buildDialogOption(
+                title: 'Exit (Stock OUT)',
+                description: 'Products leaving the warehouse',
+                icon: Icons.logout_rounded,
+                value: 'OUT',
+                color: Colors.red,
+                tinted: true,
+              ),
+              const SizedBox(height: 24),
+              _cancelButton(() => Navigator.pop(context)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedModelType = 'entrance_exit';
+        _selectedSection = null;
+        _movementType = result;
+        _modelDisplayName = result == 'IN'
+            ? 'Entrance (Stock IN)'
+            : 'Exit (Stock OUT)';
+      });
+      _initializeCamera();
+    } else {
+      if (mounted) _showModelSelectionDialog();
+    }
+  }
+
+  Future<void> _showWarehouseSectionDialog() async {
+    final section = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dialogHeader(
+                icon: Icons.category_rounded,
+                color: AppColors.primaryBlue,
+                title: 'Warehouse Section',
+                subtitle: 'Choose a section to scan',
+                onBack: () {
+                  Navigator.pop(context);
+                  _showModelSelectionDialog();
+                },
+              ),
+              const SizedBox(height: 24),
+              const Divider(height: 1),
+              const SizedBox(height: 24),
+              _buildDialogOption(
+                title: 'Chocolates',
+                description: 'Detect & classify chocolate products',
+                icon: Icons.cake_rounded,
+                value: 'chocolates',
+                color: Colors.brown,
+              ),
+              const SizedBox(height: 12),
+              _buildDialogOption(
+                title: 'Snacks',
+                description: 'Detect & classify snack items',
+                icon: Icons.fastfood_rounded,
+                value: 'snacks',
+                color: Colors.orange,
+              ),
+              const SizedBox(height: 12),
+              _buildDialogOption(
+                title: 'Beverages',
+                description: 'Detect & classify drink products',
+                icon: Icons.local_drink_rounded,
+                value: 'beverages',
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 12),
+              _buildDialogOption(
+                title: 'Dairy',
+                description: 'Detect & classify dairy products',
+                icon: Icons.water_drop_rounded,
+                value: 'dairy',
+                color: Colors.lightBlue,
+              ),
+              const SizedBox(height: 24),
+              _cancelButton(() => Navigator.pop(context)),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (section != null) {
+      setState(() {
+        _selectedModelType = 'warehouse';
+        _selectedSection = section;
+        _movementType = null;
+        _modelDisplayName = _getSectionDisplayName(section);
+      });
+      _initializeCamera();
+    } else {
+      if (mounted) _showModelSelectionDialog();
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // DIALOG WIDGETS
+  // ─────────────────────────────────────────────────────────────
+
+  Widget _dialogHeader({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required VoidCallback onBack,
+  }) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: onBack,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 16,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        const SizedBox(width: 14),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 22),
+        ),
+        const SizedBox(width: 14),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDialogOption({
+    required String title,
+    required String description,
+    required IconData icon,
+    required String value,
+    required Color color,
+    bool tinted = false,
+  }) {
+    return InkWell(
+      onTap: () => Navigator.pop(context, value),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: tinted ? color.withOpacity(0.4) : Colors.grey.shade300,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          color: tinted ? color.withOpacity(0.04) : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: color, size: 26),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: tinted ? color : null,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _cancelButton(VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        child: const Text(
+          'Cancel',
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // CAMERA
+  // ─────────────────────────────────────────────────────────────
 
   Future<void> _initializeCamera() async {
     try {
@@ -704,22 +484,17 @@ class _CameraPageState extends State<CameraPage> {
         _showError('No cameras available');
         return;
       }
-
       controller = CameraController(
         widget.cameras[0],
-        ResolutionPreset.high,
+        ResolutionPreset.veryHigh,
         enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
       );
-
       await controller!.initialize();
-      
+      await controller!.setFocusMode(FocusMode.auto);
+      await controller!.setExposureMode(ExposureMode.auto);
       if (!mounted) return;
-      
-      setState(() {
-        _isCameraInitialized = true;
-      });
-
-      // Start auto-detection every 2 seconds
+      setState(() => _isCameraInitialized = true);
       _startAutoDetection();
     } catch (e) {
       _showError('Camera initialization failed: $e');
@@ -727,59 +502,104 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _startAutoDetection() {
-    _detectionTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+    _detectionTimer = Timer.periodic(const Duration(seconds: 2), (_) {
       if (_isCameraInitialized && !isProcessing && mounted) {
         captureAndDetect();
       }
     });
   }
 
+  // ─────────────────────────────────────────────────────────────
+  // DETECTION
+  // ─────────────────────────────────────────────────────────────
+
   Future<void> captureAndDetect() async {
     if (controller == null || !controller!.value.isInitialized) return;
     if (controller!.value.isTakingPicture) return;
     if (isProcessing) return;
+    if (_selectedModelType == null) return;
 
     setState(() => isProcessing = true);
 
     try {
       final image = await controller!.takePicture();
-      Uint8List bytes = await image.readAsBytes();
-      String base64Image = base64Encode(bytes);
+      final bytes = await image.readAsBytes();
+      final b64Image = base64Encode(bytes);
 
-      final response = await http.post(
-        Uri.parse("http://192.168.100.171:5000/detect"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"image": base64Image}),
-      );
+      final response = await http
+          .post(
+            Uri.parse("http://192.168.100.171:5000/detect"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({
+              "image": b64Image,
+              "model_type": _selectedModelType,
+              "section": _selectedSection,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final body = jsonDecode(response.body);
+        final bool ok = body["success"] == true;
+        final List dets = ok ? (body["detections"] ?? []) : [];
 
-        if (data["success"] == true) {
-          List detections = data["detections"] ?? [];
+        if (ok && dets.isNotEmpty) {
+          for (final det in dets) {
+            final String className = det['class'] as String;
+            final double confidence = (det['confidence'] as num).toDouble();
+            final String? qrText = det['qr_text'] as String?;
 
-          if (detections.isNotEmpty) {
-            // Update detection counts
-            for (var detection in detections) {
-              String className = detection['class'];
-              double confidence = (detection['confidence'] as num).toDouble();
-              
-              // Only count detections with confidence > 50%
-              if (confidence > 0.5) {
-                _detectedObjects[className] = (_detectedObjects[className] ?? 0) + 1;
+            if (confidence < 0.5) continue;
+
+            if (_selectedModelType == 'entrance_exit' && qrText != null) {
+              // ── Parse every field from the QR payload ─────────────────
+              final qr = _parseQRText(qrText);
+
+              // Accept 'quantity' OR 'qty' as the quantity key
+              final product = qr['product'];
+              final qty = _toInt(qr['quantity'] ?? qr['qty']) ?? 1;
+              final type = (qr['type'] ?? _movementType ?? 'IN')
+                  .toString()
+                  .toUpperCase();
+              final widRaw = qr['warehouse_id'];
+              final wid =
+                  _toInt(widRaw) ?? _toInt(staffData['warehouse_id']) ?? 0;
+              final date = qr['date'];
+              final expiryDate = qr['expiry_date'];
+              final costPrice = _toDouble(qr['cost_price']);
+
+              if (product != null && product.isNotEmpty) {
+                _qrDetectedItems[product] = {
+                  'qty': qty,
+                  'type': type,
+                  'warehouse_id': wid,
+                  'date': date,
+                  'expiry_date': expiryDate,
+                  'cost_price': costPrice,
+                  'raw': qrText,
+                };
+                print(
+                  'QR parsed → product=$product  qty=$qty  type=$type  '
+                  'wid=$wid  date=$date  expiry=$expiryDate  cost=$costPrice',
+                );
               }
+            } else if (_selectedModelType != 'entrance_exit') {
+              // ── Warehouse: accumulate detection counts ─────────────────
+              _detectedObjects[className] =
+                  (_detectedObjects[className] ?? 0) + 1;
             }
-
-            setState(() {
-              resultText = detections
-                  .map((e) => "${e['class']} (${(e['confidence'] as num).toStringAsFixed(2)})")
-                  .join("\n");
-            });
-          } else {
-            setState(() => resultText = "No objects detected");
           }
+
+          setState(() {
+            resultText = dets
+                .map(
+                  (e) =>
+                      "${e['class']} (${(e['confidence'] as num).toStringAsFixed(2)})",
+                )
+                .join("\n");
+          });
         } else {
-          setState(() => resultText = "Detection failed");
+          setState(() => resultText = "No objects detected");
         }
       } else {
         setState(() => resultText = "Server error: ${response.statusCode}");
@@ -788,14 +608,22 @@ class _CameraPageState extends State<CameraPage> {
       print("Detection error: $e");
       setState(() => resultText = "Error: $e");
     } finally {
-      if (mounted) {
-        setState(() => isProcessing = false);
-      }
+      if (mounted) setState(() => isProcessing = false);
     }
   }
 
+  // ─────────────────────────────────────────────────────────────
+  // SAVE TO DATABASE
+  // ─────────────────────────────────────────────────────────────
+
   Future<void> _saveToDatabaseAndFinalize() async {
-    if (_detectedObjects.isEmpty) {
+    final isEntrance = _selectedModelType == 'entrance_exit';
+
+    if (isEntrance && _qrDetectedItems.isEmpty) {
+      _showError('No QR items detected to save');
+      return;
+    }
+    if (!isEntrance && _detectedObjects.isEmpty) {
       _showError('No objects detected to save');
       return;
     }
@@ -804,97 +632,243 @@ class _CameraPageState extends State<CameraPage> {
       _showLoadingDialog();
 
       final today = DateTime.now();
-      final todayDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      final todayStr =
+          '${today.year}-'
+          '${today.month.toString().padLeft(2, '0')}-'
+          '${today.day.toString().padLeft(2, '0')}';
 
-      // Fetch all categories from database
-      final categoriesResponse = await supabase
-          .from('categories')
-          .select('id, name');
+      final warehouseId = _toInt(staffData['warehouse_id']) ?? 0;
 
-      // Create a map of category names to IDs (case-insensitive)
-      Map<String, int> categoryMap = {};
-      for (var category in categoriesResponse) {
-        categoryMap[category['name'].toString().toLowerCase()] = category['id'];
+      // Fetch categories and build a normalized name → id map
+      final cats = await supabase.from('categories').select('id, name');
+      final Map<String, int> categoryMap = {};
+      for (final c in cats) {
+        final norm = _normalize(c['name'].toString());
+        categoryMap[norm] = c['id'] as int;
       }
+      print('Category map: $categoryMap');
 
-      // Prepare batch insert/update operations
-      List<Map<String, dynamic>> recordsToInsert = [];
-      List<String> notFoundCategories = [];
-
-      for (var entry in _detectedObjects.entries) {
-        String objectName = entry.key;
-        int count = entry.value;
-        
-        // Find matching category ID (case-insensitive)
-        int? categoryId = categoryMap[objectName.toLowerCase()];
-        
-        if (categoryId != null) {
-          // Check if record already exists for today
-          final existingRecord = await supabase
-              .from('product_count')
-              .select('scanning_count')
-              .eq('category_id', categoryId)
-              .maybeSingle();
-
-          if (existingRecord != null) {
-            // Update existing record (add to existing count)
-            final newCount = (existingRecord['scanning_count'] ?? 0) + count;
-            await supabase
-                .from('product_count')
-                .update({
-                  'scanning_count': newCount,
-                })
-                .eq('category_id', categoryId);
-          } else {
-            // Insert new record
-            recordsToInsert.add({
-              'category_id': categoryId,
-              'scanning_count': count,
-            });
-          }
-        } else {
-          notFoundCategories.add(objectName);
-        }
-      }
-
-      // Batch insert new records
-      if (recordsToInsert.isNotEmpty) {
-        await supabase.from('product_count').insert(recordsToInsert);
+      if (isEntrance) {
+        await _saveInventoryMovements(categoryMap, warehouseId, todayStr);
+      } else {
+        await _saveProductCount(categoryMap, todayStr);
       }
 
       if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-
-        // Show success message
-        String message = 'Saved ${_detectedObjects.length - notFoundCategories.length} categories to database';
-        if (notFoundCategories.isNotEmpty) {
-          message += '\n\nNot found in categories: ${notFoundCategories.join(", ")}';
-        }
-
-        _showSuccessDialog(message);
-        
-        // Clear detection data after successful save
+        Navigator.pop(context); // close loading
+        _showSuccessDialog(
+          isEntrance
+              ? 'Inventory movements saved successfully!'
+              : 'Product scan counts saved successfully!',
+        );
         setState(() {
           _detectedObjects.clear();
+          _qrDetectedItems.clear();
           resultText = "";
         });
       }
-    } catch (e) {
+    } catch (e, st) {
+      print('Error saving: $e\n$st');
       if (mounted) {
-        Navigator.pop(context); // Close loading dialog
-        _showError('Error saving to database: $e');
+        Navigator.pop(context);
+        _showError('Error saving: $e');
       }
     }
+  }
+
+  /// Normalize a category/product name for consistent matching.
+  String _normalize(String s) =>
+      s.toLowerCase().trim().replaceAll(' ', '_').replaceAll('-', '_');
+
+  /// Insert rows into `inventory_movements`.
+  Future<void> _saveInventoryMovements(
+    Map<String, int> categoryMap,
+    int warehouseId,
+    String todayStr,
+  ) async {
+    final List<String> notFound = [];
+    final List<Map<String, dynamic>> toInsert = [];
+
+    for (final entry in _qrDetectedItems.entries) {
+      final productName = entry.key;
+      final data = entry.value;
+      final norm = _normalize(productName);
+      final categoryId = categoryMap[norm];
+
+      print('QR "$productName" → norm="$norm" → id=$categoryId');
+
+      if (categoryId == null) {
+        notFound.add(productName);
+        continue;
+      }
+
+      // All fields safely cast
+      final movType =
+          (data['type'] as String?)?.toUpperCase() ?? _movementType ?? 'IN';
+      final rawQty = data['qty'];
+
+final qty = (rawQty is int)
+    ? rawQty
+    : (rawQty is double)
+        ? rawQty.toInt()
+        : (rawQty is String)
+            ? double.tryParse(rawQty)?.toInt() ?? 1
+            : 1;
+      // final qty = _toInt(data['qty']) ?? 1;
+
+      final wid = _toInt(data['warehouse_id']) ?? warehouseId;
+      final recvDate = _nonEmpty(data['date']) ?? todayStr;
+      final expiryDate = _nonEmpty(data['expiry_date']); // nullable
+      final rawCost = data['cost_price'];
+
+final costPrice = (rawCost is int)
+    ? rawCost
+    : (rawCost is double)
+        ? rawCost.toInt()
+        : (rawCost is String)
+            ? double.tryParse(rawCost)?.toInt()
+            : null;
+      final sku = 'SKU-$categoryId-${DateTime.now().millisecondsSinceEpoch}';
+
+      final row = <String, dynamic>{
+        'sku': sku,
+        'category_id': categoryId,
+        'received_date': recvDate,
+        'movement_type': movType,
+        'quantity': qty,
+        'warehouse_id': wid,
+        'reason': movType == 'IN' ? 'Stock Replenishment' : 'Sale / Dispatch',
+      };
+
+      // Only include optional columns when the value is actually present
+      if (expiryDate != null) row['expiry_date'] = expiryDate;
+      if (costPrice != null) row['cost_price'] = costPrice;
+
+      toInsert.add(row);
+      print('Queued insert: $row');
+    }
+
+    if (toInsert.isNotEmpty) {
+      print('Inserting ${toInsert.length} row(s) into inventory_movements');
+      await supabase.from('inventory_movements').insert(toInsert);
+    }
+
+    if (notFound.isNotEmpty) {
+      _showError('Not found in categories: ${notFound.join(", ")}');
+    }
+  }
+
+  /// Upsert rows in `product_count` for warehouse scanning.
+  Future<void> _saveProductCount(
+    Map<String, int> categoryMap,
+    String todayStr,
+  ) async {
+    final List<String> notFound = [];
+    final List<Map<String, dynamic>> toInsert = [];
+
+    for (final entry in _detectedObjects.entries) {
+      final norm = _normalize(entry.key);
+      final categoryId = categoryMap[norm];
+      final count = entry.value;
+
+      print('Warehouse "${entry.key}" → norm="$norm" → id=$categoryId');
+
+      if (categoryId == null) {
+        notFound.add(entry.key);
+        continue;
+      }
+
+      final existing = await supabase
+          .from('product_count')
+          .select('category_id, scanning_count')
+          .eq('category_id', categoryId)
+          .eq('scanning_date', todayStr)
+          .maybeSingle();
+
+      if (existing != null) {
+        final newCount = (existing['scanning_count'] as int? ?? 0) + count;
+        await supabase
+            .from('product_count')
+            .update({'scanning_count': newCount})
+            .eq('category_id', categoryId)
+            .eq('scanning_date', todayStr);
+        print('Updated product_count $categoryId → $newCount');
+      } else {
+        toInsert.add({
+          'category_id': categoryId,
+          'scanning_count': count,
+          'scanning_date': todayStr,
+        });
+      }
+    }
+
+    if (toInsert.isNotEmpty) {
+      await supabase.from('product_count').insert(toInsert);
+      print('Inserted ${toInsert.length} product_count row(s)');
+    }
+
+    if (notFound.isNotEmpty) {
+      _showError('Not found in categories: ${notFound.join(", ")}');
+    }
+  }
+
+  /// Returns null if the string is null or empty.
+  String? _nonEmpty(dynamic v) {
+    if (v == null) return null;
+    final s = v.toString().trim();
+    return s.isEmpty ? null : s;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // UI HELPERS
+  // ─────────────────────────────────────────────────────────────
+
+  String _getSectionDisplayName(String section) {
+    const map = {
+      'chocolates': 'Chocolates',
+      'snacks': 'Snacks',
+      'beverages': 'Beverages',
+      'dairy': 'Dairy',
+    };
+    return map[section] ?? 'Warehouse';
+  }
+
+  Color _getModelColor() {
+    if (_selectedModelType == 'entrance_exit') {
+      return _movementType == 'OUT' ? Colors.red : Colors.green;
+    }
+    const map = <String, Color>{
+      'chocolates': Colors.brown,
+      'snacks': Colors.orange,
+      'beverages': Colors.blue,
+      'dairy': Colors.lightBlue,
+    };
+    return map[_selectedSection] ?? Colors.green;
+  }
+
+  IconData _getModelIcon() {
+    if (_selectedModelType == 'entrance_exit') {
+      return _movementType == 'OUT'
+          ? Icons.logout_rounded
+          : Icons.login_rounded;
+    }
+    const map = <String, IconData>{
+      'chocolates': Icons.cake_rounded,
+      'snacks': Icons.fastfood_rounded,
+      'beverages': Icons.local_drink_rounded,
+      'dairy': Icons.water_drop_rounded,
+    };
+    return map[_selectedSection] ?? Icons.inventory_2_rounded;
   }
 
   void _showLoadingDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
+      builder: (_) => const Center(
         child: Card(
           child: Padding(
-            padding: EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -912,10 +886,10 @@ class _CameraPageState extends State<CameraPage> {
   void _showSuccessDialog(String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Row(
           children: [
-            Icon(Icons.check_circle, color: AppColors.success),
+            Icon(Icons.check_circle, color: Colors.green),
             SizedBox(width: 8),
             Text('Success'),
           ],
@@ -932,15 +906,27 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _showError(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
+  void _changeModel() {
+    _detectionTimer?.cancel();
+    setState(() {
+      _isCameraInitialized = false;
+      _detectedObjects.clear();
+      _qrDetectedItems.clear();
+      resultText = "";
+    });
+    controller?.dispose();
+    controller = null;
+    _showModelSelectionDialog();
   }
 
   @override
@@ -950,38 +936,93 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  // ─────────────────────────────────────────────────────────────
+  // BUILD
+  // ─────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     if (!_isCameraInitialized || controller == null) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: Colors.black,
-        body: const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
+
+    final isEntrance = _selectedModelType == 'entrance_exit';
+
+    // For display: entrance shows qty, warehouse shows detection count
+    final Map<String, int> displayItems = isEntrance
+        ? _qrDetectedItems.map((k, v) => MapEntry(k, _toInt(v['qty']) ?? 1))
+        : _detectedObjects;
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
           children: [
-            // Camera Preview (Full Screen)
+            // ── Camera preview ───────────────────────────────────────
             Positioned.fill(
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: SizedBox(
-                  width: controller!.value.previewSize!.height,
-                  height: controller!.value.previewSize!.width,
-                  child: CameraPreview(controller!),
+              child: OverflowBox(
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: controller!.value.previewSize!.height,
+                    height: controller!.value.previewSize!.width,
+                    child: CameraPreview(controller!),
+                  ),
                 ),
               ),
             ),
 
-            // Detection Indicator
+            // ── Mode badge (top centre) ──────────────────────────────
+            Positioned(
+              top: 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: _changeModel,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _getModelColor().withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(_getModelIcon(), color: Colors.white, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          _modelDisplayName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.swap_horiz,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // ── Detecting spinner ────────────────────────────────────
             if (isProcessing)
               Positioned(
-                top: 16,
+                top: 60,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -1007,7 +1048,7 @@ class _CameraPageState extends State<CameraPage> {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'Detecting...',
+                          'Detecting…',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -1019,14 +1060,14 @@ class _CameraPageState extends State<CameraPage> {
                 ),
               ),
 
-            // Detection Results Panel (Bottom)
+            // ── Bottom results panel ─────────────────────────────────
             Positioned(
               left: 0,
               right: 0,
               bottom: 0,
               child: Container(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.4,
+                  maxHeight: MediaQuery.of(context).size.height * 0.42,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.85),
@@ -1037,7 +1078,7 @@ class _CameraPageState extends State<CameraPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Handle Bar
+                    // Handle bar
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       width: 40,
@@ -1048,15 +1089,15 @@ class _CameraPageState extends State<CameraPage> {
                       ),
                     ),
 
-                    // Title
+                    // Header row
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Detected Objects',
-                            style: TextStyle(
+                          Text(
+                            isEntrance ? 'QR Detections' : 'Detected Objects',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -1068,11 +1109,11 @@ class _CameraPageState extends State<CameraPage> {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryBlue,
+                              color: _getModelColor(),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              '${_detectedObjects.length} items',
+                              '${displayItems.length} items',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -1085,30 +1126,34 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Detection List
+                    // List
                     Flexible(
-                      child: _detectedObjects.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.all(32.0),
+                      child: displayItems.isEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(32),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.center_focus_weak,
+                                    isEntrance
+                                        ? Icons.qr_code_scanner
+                                        : Icons.center_focus_weak,
                                     size: 48,
                                     color: Colors.grey,
                                   ),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   Text(
-                                    'Point camera at objects',
-                                    style: TextStyle(
+                                    isEntrance
+                                        ? 'Point camera at QR code'
+                                        : 'Point camera at products',
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Auto-detecting every 2 seconds',
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Auto-detecting every 2 s',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
@@ -1119,10 +1164,33 @@ class _CameraPageState extends State<CameraPage> {
                             )
                           : ListView.builder(
                               shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              itemCount: _detectedObjects.length,
-                              itemBuilder: (context, index) {
-                                final entry = _detectedObjects.entries.elementAt(index);
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              itemCount: displayItems.length,
+                              itemBuilder: (ctx, i) {
+                                final e = displayItems.entries.elementAt(i);
+                                final movType = isEntrance
+                                    ? (_qrDetectedItems[e.key]?['type']
+                                              ?.toString() ??
+                                          _movementType)
+                                    : null;
+                                final typeColor = movType == 'OUT'
+                                    ? Colors.red
+                                    : Colors.green;
+
+                                // Extra detail line for QR items
+                                final expiryDate = isEntrance
+                                    ? _nonEmpty(
+                                        _qrDetectedItems[e.key]?['expiry_date'],
+                                      )
+                                    : null;
+                                final costPrice = isEntrance
+                                    ? _toDouble(
+                                        _qrDetectedItems[e.key]?['cost_price'],
+                                      )
+                                    : null;
+
                                 return Container(
                                   margin: const EdgeInsets.only(bottom: 8),
                                   padding: const EdgeInsets.all(12),
@@ -1138,24 +1206,68 @@ class _CameraPageState extends State<CameraPage> {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: AppColors.primaryBlue,
-                                          borderRadius: BorderRadius.circular(8),
+                                          color: isEntrance
+                                              ? typeColor.withOpacity(0.2)
+                                              : AppColors.primaryBlue,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
-                                        child: const Icon(
-                                          Icons.inventory_2,
-                                          color: Colors.white,
+                                        child: Icon(
+                                          isEntrance
+                                              ? (movType == 'OUT'
+                                                    ? Icons.logout_rounded
+                                                    : Icons.login_rounded)
+                                              : Icons.inventory_2,
+                                          color: isEntrance
+                                              ? typeColor
+                                              : Colors.white,
                                           size: 20,
                                         ),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
-                                        child: Text(
-                                          entry.key,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              e.key,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            if (movType != null)
+                                              Text(
+                                                movType == 'IN'
+                                                    ? '● Stock IN'
+                                                    : '● Stock OUT',
+                                                style: TextStyle(
+                                                  color: typeColor,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            // Show expiry & cost if available
+                                            if (expiryDate != null)
+                                              Text(
+                                                'Exp: $expiryDate',
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            if (costPrice != null)
+                                              Text(
+                                                'Cost: \$${costPrice.toStringAsFixed(2)}',
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                       ),
                                       Container(
@@ -1164,11 +1276,15 @@ class _CameraPageState extends State<CameraPage> {
                                           vertical: 6,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: AppColors.success,
-                                          borderRadius: BorderRadius.circular(12),
+                                          color: isEntrance
+                                              ? typeColor
+                                              : Colors.green,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                         child: Text(
-                                          '${entry.value}x',
+                                          '${e.value}x',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -1182,25 +1298,26 @@ class _CameraPageState extends State<CameraPage> {
                             ),
                     ),
 
-                    // Action Buttons
+                    // Action buttons
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: _detectedObjects.isEmpty
+                              onPressed: displayItems.isEmpty
                                   ? null
-                                  : () {
-                                      setState(() {
-                                        _detectedObjects.clear();
-                                        resultText = "";
-                                      });
-                                    },
+                                  : () => setState(() {
+                                      _detectedObjects.clear();
+                                      _qrDetectedItems.clear();
+                                      resultText = "";
+                                    }),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red.shade700,
                                 disabledBackgroundColor: Colors.grey.shade700,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -1219,13 +1336,15 @@ class _CameraPageState extends State<CameraPage> {
                           Expanded(
                             flex: 2,
                             child: ElevatedButton(
-                              onPressed: _detectedObjects.isEmpty
+                              onPressed: displayItems.isEmpty
                                   ? null
                                   : _saveToDatabaseAndFinalize,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.success,
+                                backgroundColor: Colors.green,
                                 disabledBackgroundColor: Colors.grey.shade700,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -1255,7 +1374,7 @@ class _CameraPageState extends State<CameraPage> {
               ),
             ),
 
-            // Back Button
+            // ── Back button ──────────────────────────────────────────
             Positioned(
               top: 16,
               left: 16,

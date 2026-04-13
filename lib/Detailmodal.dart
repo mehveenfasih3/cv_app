@@ -9,7 +9,7 @@ class DetailModal extends StatelessWidget {
   const DetailModal({
     Key? key,
     required this.verification,
-    required this.response,
+    required this.response, required String mode,
   }) : super(key: key);
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iris_app/admin_worker.dart';
 import 'package:iris_app/app_colors.dart';
+import 'package:iris_app/custom_drawer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WorkersManagementScreen extends StatefulWidget {
@@ -423,6 +424,9 @@ class _WorkersManagementScreenState extends State<WorkersManagementScreen> {
         title: const Text('Workers Management'),
         backgroundColor: AppColors.primaryBlue,
         foregroundColor: Colors.white,
+      ),
+       drawer: CustomDrawer(
+       staffData: widget.staffData,
       ),
       body: _isLoading
           ? const Center(

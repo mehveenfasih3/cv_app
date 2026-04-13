@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:iris_app/admin_edit_profile.dart';
 import 'package:iris_app/app_colors.dart';
+import 'package:iris_app/cerberus.dart';
+import 'package:iris_app/products.dart';
 import 'package:iris_app/sign_in.dart';
+import 'package:iris_app/worker_management.dart';
 
 import 'package:provider/provider.dart';
+
 class AdminDrawer extends StatefulWidget {
   final Map<String, dynamic> staffData;
 
   const AdminDrawer({Key? key, required this.staffData}) : super(key: key);
-
- 
 
   @override
   State<AdminDrawer> createState() => _AdminDrawerState();
@@ -20,10 +22,6 @@ class _AdminDrawerState extends State<AdminDrawer> {
 
   @override
   Widget build(BuildContext context) {
-   
-
-
-
     return Drawer(
       child: Column(
         children: [
@@ -95,50 +93,42 @@ class _AdminDrawerState extends State<AdminDrawer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  EditAdminProfileScreen(
-                          staffData:widget.staffData,
-                        ),
+                        builder: (context) =>
+                            EditAdminProfileScreen(staffData: widget.staffData),
                       ),
                     );
                   },
                 ),
                 const Divider(),
 
-                // ListTile(
-                //   leading: Icon(
-                //     themeProvider.isDarkMode
-                //         ? Icons.dark_mode
-                //         : Icons.light_mode,
-                //   ),
-                //   title: const Text('Theme'),
-                //   trailing: Switch(
-                //     value: themeProvider.isDarkMode,
-                //     onChanged: (value) {
-                //       themeProvider.toggleTheme(value);
-                //     },
-                //     activeColor: AppColors.primaryBlue,
-                //   ),
-                // ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
+            
+             
+                 ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: const Text('Worker Management'),
                   onTap: () {
-                    Navigator.pop(context);
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>      WorkersManagementScreen(
+ staffData: widget.staffData),));
+   
+                    // close the drawer or bottom sheet if needed
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.help_outline),
-                  title: const Text('Help & Support'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
+                 ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: const Text('About'),
+                  title: const Text('Products Information'),
                   onTap: () {
-                    Navigator.pop(context);
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  WarehouseProductsScreen(staffData: widget.staffData)));
+           
+                    // close the drawer or bottom sheet if needed
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.chat_bubble_outline),
+                  title: const Text('IRIS AI'),
+                  onTap: () {
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  ChatScreen( staffData: widget.staffData,role:"manager"),));
+        
+                    // close the drawer or bottom sheet if needed
                   },
                 ),
               ],
@@ -167,7 +157,12 @@ class _AdminDrawerState extends State<AdminDrawer> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) => SignInScreen(),));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignInScreen(),
+                          ),
+                        );
                       },
                       child: const Text('Logout'),
                     ),
@@ -182,4 +177,3 @@ class _AdminDrawerState extends State<AdminDrawer> {
     );
   }
 }
-  

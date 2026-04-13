@@ -413,7 +413,7 @@ Future<void> _handleSignIn() async {
                         indicatorSize: TabBarIndicatorSize.tab,
                         tabs: const [
                           Tab(text: 'Warehouse'),
-                          Tab(text: 'Grocery'),
+                          // Tab(text: 'Grocery'),
                         ],
                       ),
                     ),

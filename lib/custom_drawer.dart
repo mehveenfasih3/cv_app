@@ -1,8 +1,13 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:iris_app/admin_edit_profile.dart';
 import 'package:iris_app/app_colors.dart';
+import 'package:iris_app/cerberus.dart';
+import 'package:iris_app/cv_scanning.dart';
 import 'package:iris_app/edit_profile_screen.dart';
+import 'package:iris_app/performance_report.dart';
 import 'package:iris_app/sign_in.dart';
+import 'package:iris_app/worker_home_screen.dart';
 
 import 'package:provider/provider.dart';
 class CustomDrawer extends StatefulWidget {
@@ -88,10 +93,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
+                
                 ListTile(
                   leading: const Icon(Icons.edit),
                   title: const Text('Edit Profile'),
                   onTap: () {
+
                     Navigator.pop(context);
                     Navigator.push(
                       context,
@@ -103,45 +110,50 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     );
                   },
                 ),
+               
                 const Divider(),
-
-                // ListTile(
-                //   leading: Icon(
-                //     themeProvider.isDarkMode
-                //         ? Icons.dark_mode
-                //         : Icons.light_mode,
-                //   ),
-                //   title: const Text('Theme'),
-                //   trailing: Switch(
-                //     value: themeProvider.isDarkMode,
-                //     onChanged: (value) {
-                //       themeProvider.toggleTheme(value);
-                //     },
-                //     activeColor: AppColors.primaryBlue,
-                //   ),
-                // ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.help_outline),
-                  title: const Text('Help & Support'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
+                  ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: const Text('About'),
-                  onTap: () {
-                    Navigator.pop(context);
+                  title: const Text('Daily Tasks'),
+                  onTap: () async {
+                      final cameras =  await availableCameras();
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  WorkerHomeScreen(staffData: staffData),));
+           
+                    // close the drawer or bottom sheet if needed
                   },
                 ),
+              
+                 
+                 ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('Scanned Products'),
+                  onTap: () async {
+                      final cameras =  await availableCameras();
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  CameraPage(cameras: cameras,staffData: staffData,),));
+           
+                    // close the drawer or bottom sheet if needed
+                  },
+                ),
+                 ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('Reports'),
+                  onTap: () {
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  PerformanceReportScreen(staffData: widget.staffData,),));
+           
+                    // close the drawer or bottom sheet if needed
+                  },
+                ),
+               ListTile(
+                  leading: const Icon(Icons.chat_bubble_outline),
+                  title: const Text('IRIS AI'),
+                  onTap: () {
+                     Navigator.pushReplacement(context, MaterialPageRoute(builder:  (context) =>  ChatScreen( staffData: widget.staffData,role:"manager"),));
+        
+                    // close the drawer or bottom sheet if needed
+                  },
+                ),
+
+             
               ],
             ),
           ),

@@ -3,7 +3,8 @@ import 'package:iris_app/app_colors.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WarehouseProductsScreen extends StatefulWidget {
-  const WarehouseProductsScreen({Key? key}) : super(key: key);
+   final Map<String, dynamic> staffData;
+  const WarehouseProductsScreen({Key? key, required this.staffData}) : super(key: key);
 
   @override
   State<WarehouseProductsScreen> createState() =>
@@ -20,7 +21,7 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
   List<Map<String, dynamic>> _groceryProducts = [];
   bool _isLoading = true;
   String? _errorMessage;
-
+  get staffData => widget.staffData;
   final supabase = Supabase.instance.client;
 
   @override
@@ -43,18 +44,17 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
     super.dispose();
   }
 
-  Future<void> _fetchProducts() async {
+Future<void> _fetchProducts() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
     try {
-      // Format selected date as YYYY-MM-DD
-      final selectedDateStr = 
+      final selectedDateStr =
           '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
 
-      // Fetch products with category information filtered by date
+      // Fetch product_count with category info
       final response = await supabase
           .from('product_count')
           .select('''
@@ -63,13 +63,28 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
             category_id,
             categories (
               id,
-              name,
-              total_counts
+              name
             )
           ''')
-          .eq('scanning_date', selectedDateStr); // Filter by selected date
+          .eq('scanning_date', selectedDateStr);
 
-      // Group products by category_id to avoid duplicates and sum counts
+      // Fetch total IN movements per category for warehouse 25
+      final movementsResponse = await supabase
+          .from('inventory_movements')
+          .select('category_id, quantity')
+          .eq('warehouse_id', staffData['warehouse_id'])
+          .eq('movement_type', 'IN');
+
+      // Sum up all IN quantities per category_id
+      final Map<int, int> totalInPerCategory = {};
+      for (var movement in movementsResponse) {
+        final categoryId = movement['category_id'] as int;
+        final quantity = movement['quantity'] as int? ?? 0;
+        totalInPerCategory[categoryId] =
+            (totalInPerCategory[categoryId] ?? 0) + quantity;
+      }
+
+      // Group products by category_id
       final Map<int, Map<String, dynamic>> productMap = {};
 
       for (var item in response) {
@@ -77,15 +92,16 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
         if (category != null) {
           final categoryId = item['category_id'] as int;
           final scanningCount = item['scanning_count'] as int? ?? 0;
-          final actualCount = category['total_counts'] as int? ?? 0;
 
-          // If category already exists, add to scanning count
+          // Get actual count from inventory_movements IN sum
+          final actualCount = totalInPerCategory[categoryId] ?? 0;
+
           if (productMap.containsKey(categoryId)) {
             productMap[categoryId]!['scanningCount'] += scanningCount;
           } else {
             productMap[categoryId] = {
               'name': category['name'],
-              'actualCount': actualCount,
+              'actualCount': actualCount,   // ← now from inventory_movements
               'scanningCount': scanningCount,
               'scanningDate': item['scanning_date'],
               'categoryId': categoryId,
@@ -94,7 +110,6 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
         }
       }
 
-      // Convert map to list
       final warehouse = productMap.values.toList();
 
       setState(() {
@@ -108,7 +123,6 @@ class _WarehouseProductsScreenState extends State<WarehouseProductsScreen>
       });
     }
   }
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,

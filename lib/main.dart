@@ -4,9 +4,11 @@ import 'package:iris_app/Detailmodal.dart';
 import 'package:iris_app/app_colors.dart';
 import 'package:iris_app/cerberus.dart';
 import 'package:iris_app/cv_scanning.dart';
+import 'package:iris_app/nis.dart';
 
 import 'package:iris_app/sign_in.dart';
 import 'package:iris_app/splash_screen.dart';
+import 'package:iris_app/voice_assistant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 
@@ -17,7 +19,7 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtYmZmeW5hd2ZoYWxpdWJxcWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzNzMzOTAsImV4cCI6MjA3Njk0OTM5MH0.z0PwZXosZALT4aa4dvLY_qfBKBgvoYiEI6HzGjGCoi4',
   );
- cameras = await availableCameras();
+var cameras = await availableCameras();
   runApp( MyApp());
 }
 class MyApp extends StatefulWidget {
@@ -42,7 +44,9 @@ class _MyAppState extends State<MyApp> {
       theme: _buildLightTheme(),
       darkTheme: _buildDarkTheme(),
       themeMode: _themeMode,
-      home: SplashScreen(),
+     home: SplashScreen(),
+      // home:IrisApp(),
+      //  home:VoiceChatScreen(),
     );
   }
 
